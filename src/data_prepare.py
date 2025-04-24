@@ -11,12 +11,12 @@ from psd_tools import PSDImage
 from tqdm import tqdm
 
 # 設定
-source_image_path = '/Users/yuma/Yuma-Kanematsu/nnUNet/src/raw_data/Photoshop_annotation_data/Trap_door_muscle_fracture'
-source_label_path = '/Users/yuma/Yuma-Kanematsu/nnUNet/src/raw_data/250328_for_test'
-output_base_path = '/Users/yuma/Yuma-Kanematsu/nnUNet/nnUNet_raw'
-dataset_id = 1
-dataset_name = 'ForTest'
-test_patient_num = 2  # テスト用に選ぶ患者数
+source_image_path = '/Users/yuma/Yuma-Kanematsu/nnUNet/src/raw_data/CT_images_raw_JPEG_TRAP'
+source_label_path = '/Users/yuma/Yuma-Kanematsu/nnUNet/src/raw_data/2504234_for_006_raw_PSD_ALL'
+output_base_path = '/Users/yuma/Yuma-Kanematsu/nnUNet/src/raw_data'
+dataset_id = 6
+dataset_name = 'Orbital_Trap_All'
+test_patient_num = 0  # テスト用に選ぶ患者数
 color_threshold = 50  # 赤色チャンネルに対する閾値
 
 # PSDを赤色ベースのマスクに変換する関数
@@ -142,6 +142,8 @@ for patient_id in patient_ids:
         img_path = os.path.join(source_image_path, img_file)
         try:
             img = Image.open(img_path)
+            img = img.convert('L')  # グレースケールに変換
+            img = img.resize((512, 512), Image.NEAREST)  # リサイズ
         except Exception as e:
             print(f"エラー: 画像ファイル {img_path} の読み込み中にエラーが発生しました: {str(e)}")
             error_count += 1
@@ -159,6 +161,7 @@ for patient_id in patient_ids:
         img.save(target_img_path, format='PNG')
         
         # トレーニングデータの場合はラベルも処理
+        # トレーニングデータの場合はラベルも処理
         if not is_test:
             # PSDファイルを赤色マスクに変換
             label_path = os.path.join(source_label_path, label_file)
@@ -169,8 +172,11 @@ for patient_id in patient_ids:
                 if np.any(label_array > 0):
                     label_classes.add(1)  # クラス1としてカウント
                     
+                    # ラベルもリサイズする
+                    label_array = np.array(Image.fromarray(label_array).resize((512, 512), Image.NEAREST))
+                    
                     # ラベルを保存
-                    label_img = Image.fromarray(label_array * 255)  # 表示用に255に拡大
+                    label_img = Image.fromarray(label_array)
                     target_label_path = os.path.join(output_path, 'labelsTr', f"{base_name}.png")
                     label_img.save(target_label_path, format='PNG')
                     success_count += 1

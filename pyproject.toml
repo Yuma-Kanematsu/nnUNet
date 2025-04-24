@@ -31,8 +31,10 @@ keywords = [
 ]
 dependencies = [
     "torch>=2.1.2",
-    "acvl-utils>=0.2.3,<0.3",  # 0.3 may bring breaking changes. Careful!
-    "dynamic-network-architectures>=0.3.1,<0.4",  # 0.3.1 and lower are supported, 0.4 may have breaking changes. Let's be careful here
+    "acvl-utils>=0.2.3,<0.3",
+    # 0.3 may bring breaking changes. Careful!
+    "dynamic-network-architectures>=0.3.1,<0.4",
+    # 0.3.1 and lower are supported, 0.4 may have breaking changes. Let's be careful here
     "tqdm",
     "dicom2nifti",
     "scipy",
@@ -52,7 +54,14 @@ dependencies = [
     "yacs",
     "batchgeneratorsv2>=0.2",
     "einops",
-    "blosc2>=3.0.0b1"
+    "blosc2>=3.0.0b1",
+    "tabulate>=0.9.0",
+    "opencv-python>=4.11.0.86",
+    "ipython>=8.34.0",
+    "matplotlib-inline>=0.1.7",
+    "ipykernel>=6.29.5",
+    "psd-tools>=1.10.7",
+    "ultralytics>=8.3.111",
 ]
 
 [project.urls]
